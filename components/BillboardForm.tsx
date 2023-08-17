@@ -1,6 +1,5 @@
 'use client';
 
-import { useOrigin } from '@/hooks/useOrigin';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Billboard } from '@prisma/client';
 import axios from 'axios';
@@ -11,13 +10,12 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
 import AlertModal from './modals/AlertModal';
-import ApiAlert from './ui/ApiAlert';
+import ImageUpload from './ui/ImageUpload';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import Heading from './ui/heading';
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
-import ImageUpload from './ui/ImageUpload';
 
 interface Props {
 	initialData: Billboard | null;
@@ -26,7 +24,6 @@ interface Props {
 const BillboardForm: React.FC<Props> = ({ initialData }) => {
 	const params = useParams();
 	const router = useRouter();
-	const origin = useOrigin();
 
 	const title = initialData ? 'Edit Billboard' : 'Create Billboard';
 	const description = initialData ? 'Edit a billboard' : 'Add a new billboard';
@@ -61,6 +58,7 @@ const BillboardForm: React.FC<Props> = ({ initialData }) => {
 				await axios.post(`/api/${params.storeId}/billboards`, values);
 			}
 			router.refresh();
+			router.push(`/${params.storeId}/billboards`);
 			toast.success(toastMessage);
 		} catch (err) {
 			toast.error('Something went wrong.');
@@ -74,7 +72,7 @@ const BillboardForm: React.FC<Props> = ({ initialData }) => {
 			setLoading(true);
 			await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
 			router.refresh();
-			router.push('/');
+			router.push(`/${params.storeId}/billboards`);
 			toast.success('Billboard deleted.');
 		} catch (err) {
 			toast.error('Make sure you removed all categories using this billboard first.');
@@ -154,15 +152,24 @@ const BillboardForm: React.FC<Props> = ({ initialData }) => {
 							)}
 						/>
 					</div>
-					<Button
-						disabled={loading}
-						type='submit'
-					>
-						{action}
-					</Button>
+					<div className='flex gap-2'>
+						<Button
+							disabled={loading}
+							type='submit'
+						>
+							{action}
+						</Button>
+						<Button
+							onClick={() => router.push(`/${params.storeId}/billboards`)}
+							variant={'secondary'}
+							disabled={loading}
+							type='button'
+						>
+							Cancel
+						</Button>
+					</div>
 				</form>
 			</Form>
-			<Separator />
 		</>
 	);
 };
