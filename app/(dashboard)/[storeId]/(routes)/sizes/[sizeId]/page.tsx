@@ -8,12 +8,6 @@ export default async function Page({ params }: { params: { sizeId: string; store
 		},
 	});
 
-	const billboards = await prismadb.billboard.findMany({
-		where: {
-			storeId: params.storeId,
-		},
-	});
-
 	return (
 		<div className='flex-col'>
 			<div className='flex-1 space-y-4 p-8 pt-6'>
