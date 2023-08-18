@@ -31,7 +31,7 @@ export const columns: ColumnDef<ColorColumn>[] = [
 					style={{
 						backgroundColor: row.original.value,
 					}}
-					className={`h-5 w-5 rounded-full border cursor-pointer`}
+					className={`p-4 rounded-full border cursor-pointer`}
 				></div>
 				{row.original.value}
 			</div>
