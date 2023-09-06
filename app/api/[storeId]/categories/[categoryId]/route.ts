@@ -4,16 +4,16 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req: Request, { params }: { params: { categoryId: string } }) {
 	try {
-		const { userId } = auth();
-
-		if (!userId) return new NextResponse('Unauthenticated', { status: 401 });
-
+		
 		if (!params.categoryId) return new NextResponse('Category ID is required', { status: 400 });
 
 		const category = await prismadb.category.findFirst({
 			where: {
 				id: params.categoryId,
 			},
+			include: {
+				billboard: true
+			}
 		});
 
 		return NextResponse.json(category);
